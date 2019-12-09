@@ -1,0 +1,23 @@
+﻿  asio.cpp
+  asiodrivers.cpp
+  asiolist.cpp
+c:\users\신의협\onedrive\git\rt_auxiva_rls\asiolist.cpp(57): warning C4267: '인수': 'size_t'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\신의협\onedrive\git\rt_auxiva_rls\asiolist.cpp(64): warning C4267: '인수': 'size_t'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  AUXIVA_Online.cpp
+  iasiothiscallresolver.cpp
+  main.cpp
+c:\users\신의협\onedrive\git\rt_auxiva_rls\main.cpp(218): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\신의협\onedrive\git\rt_auxiva_rls\main.cpp(220): warning C4244: '=': 'double'에서 'MY_TYPE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\신의협\onedrive\git\rt_auxiva_rls\main.cpp(247): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\신의협\onedrive\git\rt_auxiva_rls\main.cpp(249): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\신의협\onedrive\git\rt_auxiva_rls\main.cpp(265): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\신의협\onedrive\git\rt_auxiva_rls\main.cpp(267): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\신의협\onedrive\git\rt_auxiva_rls\main.cpp(139): warning C4101: 'bufferBytes' :참조되지 않은 지역 변수입니다.
+  ProcBuffers.cpp
+  RtAudio.cpp
+  sigproc.cpp
+c:\users\신의협\onedrive\git\rt_auxiva_rls\sigproc.cpp(251): warning C4838: 'size_t'에서 'long'(으)로의 변환에는 축소 변환이 필요합니다.
+  stft.cpp
+  tools.cpp
+  코드를 생성하고 있습니다...
+  RT_AUXIVA_RLS.vcxproj -> C:\Users\신의협\OneDrive\Git\RT_AUXIVA_RLS\x64\Debug\RT_AUXIVA_RLS.exe
