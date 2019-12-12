@@ -27,7 +27,7 @@ typedef char MY_TYPE;
 typedef signed short MY_TYPE;
 #define FORMAT RTAUDIO_SINT16
 
-#define CHANNEL 2
+#define CHANNEL 3
 #define BUFFERFRAME 256
 
 int record_num = 0;
@@ -137,7 +137,7 @@ int inout(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 int main(void)
 {
 	unsigned int channels, fs, bufferBytes, oDevice = 0, iDevice = 0, iOffset = 0, oOffset = 0;
-	double time = 16.0;
+	double time = 32;
 	int in_buffer_cnt = 0;
 	int out_buffer_cnt = 0;
 	int i, j, ch;
@@ -166,7 +166,7 @@ int main(void)
 		std::cout << "\nNo audio devices found!\n";
 		exit(1);
 	}
-	channels = 2;
+	channels = CHANNEL;
 	fs = 48000;
 
 	adac.showWarnings(true);

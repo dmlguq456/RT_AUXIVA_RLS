@@ -1,6 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define MAKE_FILE		1			//option 1 : wav 저장		2: strout 출력
-
 #include <stdio.h>
 #include "ProcBuffers.h"
 #include "sigproc.h"
