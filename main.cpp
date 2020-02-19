@@ -28,7 +28,7 @@ typedef signed short MY_TYPE;
 #define FORMAT RTAUDIO_SINT16
 
 #define CHANNEL 3
-#define BUFFERFRAME 256
+#define BUFFERFRAME BufferSize
 
 int record_num = 0;
 int copyend = 0;
@@ -150,9 +150,9 @@ int main(void)
 	proc_output = new double *[CHANNEL];
 	for (i = 0; i < CHANNEL; i++)
 	{
-		input[i] = new double[BUFFERFRAME];
-		proc_output[i] = new double[3 * BUFFERFRAME];
-		for (j = 0; j < BUFFERFRAME; j++)
+		input[i] = new double[BufferSize];
+		proc_output[i] = new double[3 * BufferSize];
+		for (j = 0; j < BufferSize; j++)
 		{
 			input[i][j] = 0.0;
 		}
@@ -172,7 +172,7 @@ int main(void)
 	adac.showWarnings(true);
 
 	// Set the same number of channels for both input and output.
-	unsigned int bufferFrames = 256;
+	unsigned int bufferFrames = BufferSize;
 	RtAudio::StreamParameters iParams, oParams;
 	iParams.deviceId = iDevice;
 	iParams.nChannels = channels;
@@ -214,8 +214,8 @@ int main(void)
 	// Allocate the entire data buffer before starting stream.
 	data.in_buffer = (MY_TYPE*)malloc(totalBytes);
 	data.out_buffer = (MY_TYPE*)malloc(totalBytes);
-	data.z_buffer = new MY_TYPE[BUFFERFRAME * channels];
-	for (i = 0; i <BUFFERFRAME * channels; i++)
+	data.z_buffer = new MY_TYPE[BufferSize * channels];
+	for (i = 0; i <BufferSize * channels; i++)
 	{
 		data.z_buffer[i] = 0.0;
 	}
