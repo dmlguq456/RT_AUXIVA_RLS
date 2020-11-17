@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#define MAKE_FILE		2			//option 1 : wav 저장		2: strout 출력
+#define MAKE_FILE		1			//option 1 : wav 저장 (IVA출력 + 입력원본)		2: strout 출력(IVA출력)		3: strout 출력 (IVA출력 + 입력 원본)
 #include <stdio.h>
 #include "ProcBuffers.h"
 #include "sigproc.h"
@@ -7,19 +7,24 @@
 
 using namespace std;
 
-AUXIVA *iip_AUX;
+AUXIVA* iip_AUX;
 #if MAKE_FILE == 1
-FILE **IVA;
+FILE** IVA;
+FILE** IN;
 
 #endif
 
 //For downsampling (48k to 16k)
-double **InitCond, *XX_LP, *XX, **xx_lp, **x;
+double** InitCond, * XX_LP, * XX, ** xx_lp, ** x;
 
-double **out_buff;
-short **IVA_out;
-double **input_temp;
-double **output;
+double** out_buff;
+short** IVA_out;
+double** input_temp;
+double** output;
+
+double** in_buff;
+short** origin_out;
+double** input;
 
 ProcBuffers::ProcBuffers()
 {
@@ -27,33 +32,44 @@ ProcBuffers::ProcBuffers()
 
 	iip_AUX = new AUXIVA();
 
-	input_temp = new double*[Nch];
-	output = new double*[Nch];
-	out_buff = new double*[Nch];
-	IVA_out = new short*[Nch];
+	input_temp = new double* [Nch];
+	output = new double* [Nch];
+	out_buff = new double* [Nch];
+	IVA_out = new short* [Nch];
+
+	in_buff = new double* [Nch];
+	origin_out = new short* [Nch];
+	input = new double* [Nch];
+
 	for (ch = 0; ch < Nch; ch++)
 	{
 		input_temp[ch] = new double[nWin];
 		output[ch] = new double[BufferSize];
 		out_buff[ch] = new double[BufferSize];
 		IVA_out[ch] = new short[BufferSize];
+
+		in_buff[ch] = new double[BufferSize];
+		origin_out[ch] = new short[BufferSize];
+		input[ch] = new double[BufferSize];
+
+
 		for (i = 0; i < nWin; i++)
 		{
 			input_temp[ch][i] = 0.0;
 		}
 	}
 	//For downsampling
-	x = new double *[Nch];
+	x = new double* [Nch];
 	for (ch = 0; ch < Nch; ch++)
 	{
 		x[ch] = new double[BufferSize];
 	}
-	InitCond = new double *[Nch];
+	InitCond = new double* [Nch];
 	for (ch = 0; ch < Nch; ch++)
 	{
 		InitCond[ch] = new double[BufferSize];
 	}
-	xx_lp = new double *[Nch];
+	xx_lp = new double* [Nch];
 	for (ch = 0; ch < Nch; ch++)
 	{
 		xx_lp[ch] = new double[3 * BufferSize];
@@ -80,15 +96,22 @@ ProcBuffers::ProcBuffers()
 	}
 
 #if MAKE_FILE == 1
-	char file_name[2][500];
-	IVA = new FILE*[Nch];
+	char file_name1[2][500];
+	IVA = new FILE * [Nch];
 	for (ch = 0; ch < Nch; ch++)
 	{
-		sprintf(file_name[0], ".\\output\\IVA_ch%d.pcm", ch + 1);
-		IVA[ch] = fopen(file_name[0], "wb");
+		sprintf(file_name1[0], ".\\output\\IVA_ch%d.pcm", ch + 1);
+		IVA[ch] = fopen(file_name1[0], "wb");
+	}
+
+	char file_name2[2][500];
+	IN = new FILE * [Nch];
+	for (ch = 0; ch < Nch; ch++)
+	{
+		sprintf(file_name2[0], ".\\input\\IN_ch%d.pcm", ch + 1);
+		IN[ch] = fopen(file_name2[0], "wb");
 	}
 #endif
-
 
 }
 
@@ -114,31 +137,51 @@ ProcBuffers::~ProcBuffers()
 		delete[] output[ch];
 		delete[] out_buff[ch];
 		delete[] IVA_out[ch];
+
+		delete[] in_buff[ch];
+		delete[] origin_out[ch];
+		delete[] input[ch];
 	}
 	delete[] input_temp;
 	delete[] output;
 	delete[] out_buff;
 	delete[] IVA_out;
 
+	delete[] in_buff;
+	delete[] origin_out;
+	delete[] input;
+
 
 #if MAKE_FILE == 1
-	char file_name[2][500];
+	char file_name1[2][500];
 	for (ch = 0; ch < Nch; ch++)
 	{
 		fclose(IVA[ch]);
-		sprintf(file_name[0], ".\\output\\IVA_ch%d.pcm", ch + 1);
-		sprintf(file_name[1], ".\\output\\IVA_ch%d.wav", ch + 1);
-		pcm2wav(file_name[0], file_name[1], (long)(SamplingFreq));
-		remove(file_name[0]);
+		sprintf(file_name1[0], ".\\output\\IVA_ch%d.pcm", ch + 1);
+		sprintf(file_name1[1], ".\\output\\IVA_ch%d.wav", ch + 1);
+		pcm2wav(file_name1[0], file_name1[1], (long)(SamplingFreq));
+		remove(file_name1[0]);
 	}
 	delete[] IVA;
+
+	char file_name2[2][500];
+	for (ch = 0; ch < Nch; ch++)
+	{
+		fclose(IN[ch]);
+		sprintf(file_name2[0], ".\\input\\IN_ch%d.pcm", ch + 1);
+		sprintf(file_name2[1], ".\\input\\IN_ch%d.wav", ch + 1);
+		pcm2wav(file_name2[0], file_name2[1], (long)(SamplingFreq));
+		remove(file_name2[0]);
+	}
+	delete[] IN;
+
 
 #endif
 
 	delete iip_AUX;
 }
 
-int ProcBuffers::Process(double **input, int Nframe, double **output)
+int ProcBuffers::Process(double** input, int Nframe, double** output)
 {
 	int i, j, ch;
 	static int BuffCnt = 0, isNew16k = 0;
@@ -154,7 +197,7 @@ int ProcBuffers::Process(double **input, int Nframe, double **output)
 
 		for (i = 0; i < BufferSize; i++)
 		{
-			xx_lp[ch][BuffCnt*BufferSize + i] = InitCond[ch][i] + XX[i];
+			xx_lp[ch][BuffCnt * BufferSize + i] = InitCond[ch][i] + XX[i];
 			InitCond[ch][i] = XX_LP[BufferSize + i];
 		}
 		if (isNew16k == 1)
@@ -194,6 +237,17 @@ int ProcBuffers::Process(double **input, int Nframe, double **output)
 			}
 			fwrite(IVA_out[i], sizeof(short), BufferSize, IVA[i]);
 		}
+
+		for (i = 0; i < Nch; i++)
+		{
+			for (j = 0; j < BufferSize; j++)
+			{
+				in_buff[i][j] = input_temp[i][j] * 32768.0;
+				origin_out[i][j] = (short)(in_buff[i][j]);
+			}
+			fwrite(origin_out[i], sizeof(short), BufferSize, IN[i]);
+		}
+
 #elif MAKE_FILE == 2
 
 		for (j = 0; j < BufferSize; j++)
@@ -208,9 +262,29 @@ int ProcBuffers::Process(double **input, int Nframe, double **output)
 			}
 			cout << "\n";
 		}
+
+#else MAKE_FILE == 3
+
+		for (j = 0; j < BufferSize; j++)
+		{
+			for (i = 0; i < Nch; i++)
+			{
+				out_buff[i][j] = output[i][j] * 32768.0;
+				IVA_out[i][j] = (short)(out_buff[i][j]);
+				cout << IVA_out[i][j] << "	";
+			}
+			for (i = 0; i < Nch; i++)
+			{
+				in_buff[i][j] = input_temp[i][j] * 32768.0;
+				origin_out[i][j] = (short)(in_buff[i][j]);
+				cout << origin_out[i][j];
+				if (i != Nch - 1)
+					cout << "	";
+			}
+			cout << "\n";
+		}
+
 #endif
-
 	}
-
 	return 0;
 }

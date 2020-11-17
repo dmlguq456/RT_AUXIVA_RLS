@@ -7,8 +7,8 @@ C:\Users\신의협\Github\RT_AUXIVA_RLS\main.cpp(265,21): warning C4018: '<': si
 C:\Users\신의협\Github\RT_AUXIVA_RLS\main.cpp(267,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
 C:\Users\신의협\Github\RT_AUXIVA_RLS\main.cpp(139,29): warning C4101: 'bufferBytes' :참조되지 않은 지역 변수입니다.
   코드를 생성하고 있습니다.
-  0 of 442 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  1 of 446 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    3 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   RT_AUXIVA_RLS.vcxproj -> C:\Users\신의협\Github\RT_AUXIVA_RLS\x64\Release\RT_AUXIVA_RLS.exe
