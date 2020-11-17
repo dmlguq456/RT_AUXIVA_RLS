@@ -19,7 +19,7 @@
 
 [The RtAudio Home Page](https://www.music.mcgill.ca/~gary/rtaudio/)
 
-## Setting Parameter in AUXIVA_ICD_Online.h
+## Setting Parameter in AUXIVA_Online.h
 
 ```cpp
 #define Nch			2
