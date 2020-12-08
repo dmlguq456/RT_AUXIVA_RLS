@@ -538,6 +538,15 @@ void AUXIVA::AUXIVA_lemma(double **input, int frameInd, double **output)
 					Unumer[re] = epsi;
 					Unumer[im] = 0.0;
 				}
+				// Calculate V
+				for (ch1 = 0; ch1 < Nch; ch1++)
+				{
+					for (ch2 = 0; ch2 < Nch; ch2++)
+					{
+						V[ch1][ch2][re][ch] = f_alpha * V[ch1][ch2][re][ch] + p[ch] * (X[ch1][re] * X[ch2][re] + X[ch1][im] * X[ch2][im]);
+						V[ch1][ch2][im][ch] = f_alpha * V[ch1][ch2][im][ch] + p[ch] * (X[ch1][im] * X[ch2][re] - X[ch1][re] * X[ch2][im]);
+					}
+				}
 
 				//Calculate U
 				for ( ch1 = 0; ch1 < Nch; ch1++)
